@@ -3,21 +3,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/firebase_options.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
-  
-   // Moved here
+class RegisterView extends StatefulWidget {
+  const RegisterView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
 
   @override
-  void initState() {
+  initState() {
     _email = TextEditingController();
     _password = TextEditingController();
     super.initState();
@@ -29,6 +27,7 @@ class _LoginViewState extends State<LoginView> {
     _password.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +60,7 @@ class _LoginViewState extends State<LoginView> {
                         final email = _email.text;
                         final password = _password.text;
                         final userCredentials = await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
+                            .createUserWithEmailAndPassword(
                               email: email,
                               password: password,
                             );
