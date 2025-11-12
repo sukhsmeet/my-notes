@@ -32,38 +32,47 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          controller: _email,
-          decoration: InputDecoration(hintText: "enter your email"),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login'),
         ),
-        TextField(
-          controller: _password,
-          decoration: InputDecoration(hintText: "enter your Password"),
-        ),
-        TextButton(
-          onPressed: () async {
-            try {
-              final email = _email.text;
-              final password = _password.text;
-              final userCredentials = await FirebaseAuth.instance
-                  .signInWithEmailAndPassword(email: email, password: password);
-              print(userCredentials);
-            } on FirebaseAuthException catch (e) {
-              // print(e.code);
-              if (e.code == 'email-already-in-use') {
-                print('Email already in use');
-              } else if (e.code == 'invalid-email') {
-                print("Invalid email entered");
-              } else if (e.code == 'weak-password') {
-                print('Weak password');
+      body: Column(
+        children: [
+          TextField(
+            controller: _email,
+            decoration: InputDecoration(hintText: "enter your email"),
+          ),
+          TextField(
+            controller: _password,
+            decoration: InputDecoration(hintText: "enter your Password"),
+          ),
+          TextButton(
+            onPressed: () async {
+              try {
+                final email = _email.text;
+                final password = _password.text;
+                final userCredentials = await FirebaseAuth.instance
+                    .signInWithEmailAndPassword(email: email, password: password);
+                print(userCredentials);
+              } on FirebaseAuthException catch (e) {
+                // print(e.code);
+                if (e.code == 'email-already-in-use') {
+                  print('Email already in use');
+                } else if (e.code == 'invalid-email') {
+                  print("Invalid email entered");
+                } else if (e.code == 'weak-password') {
+                  print('Weak password');
+                }
               }
-            }
+            },
+            child: const Text('Login'),
+          ),
+          TextButton(onPressed: () {
+            Navigator.of(context).pushNamedAndRemoveUntil('/register/',(route) => false);
           },
-          child: const Text('Login'),
-        ),
-      ],
+          child:Text ('Not registered yet? Register here!'),)
+        ],
+      ),
     );
   }
 }
