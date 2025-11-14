@@ -5,6 +5,7 @@ import 'package:mynotes/firebase_options.dart';
 import 'package:mynotes/views/login_view.dart';
 import 'package:mynotes/views/register_view.dart';
 import 'package:mynotes/views/verfy_email_view.dart';
+import 'dart:developer' as developer;
 
 void main() {
   runApp(const MyApp());
@@ -38,7 +39,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Register'),
+        title: const Text('Home Page'),
         backgroundColor: Colors.blue,
       ),
       body: FutureBuilder(
@@ -51,7 +52,7 @@ class HomePage extends StatelessWidget {
               final user = FirebaseAuth.instance.currentUser;
               if (user != null) {
                 if (user.emailVerified) {
-                  return const Text('email is verified');
+                  return const NotesView();
                 } else {
                   return const VerifyEmail();
                 }
@@ -72,4 +73,74 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+}
+
+enum MenuAction { logout }
+
+class NotesView extends StatefulWidget {
+  const NotesView({super.key});
+
+  @override
+  State<NotesView> createState() => _NotesViewState();
+}
+
+class _NotesViewState extends State<NotesView> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Main ui"),
+        actions: [
+          PopupMenuButton<MenuAction>(
+            onSelected: (value) async {
+              switch (value) {
+                case MenuAction.logout:
+                  final shouldlogout = await showlogoutdialog(context);
+                  developer.log(shouldlogout.toString());
+                  FirebaseAuth.instance.signOut();
+                  Navigator.of(
+                    context,
+                  ).pushNamedAndRemoveUntil('/login/', (route) => false);
+                  break;
+              }
+            },
+            itemBuilder: (context) {
+              return const [
+                PopupMenuItem<MenuAction>(
+                  value: MenuAction.logout,
+                  child: Text('Logout'),
+                ),
+              ];
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Future<bool> showlogoutdialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text("Sign Out"),
+        content: Text("Are you sure you want to Sign Out?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+            child: Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+            child: Text("Logout"),
+          ),
+        ],
+      );
+    },
+  ).then((value) => value ?? false);
 }
