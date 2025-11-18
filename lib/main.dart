@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
         loginRoute: (context) => const LoginView(),
         registerRoute: (context) => const RegisterView(),
         notesRoute: (context) => const NotesView(),
+        verifyEmailRoute: (context) => const VerifyEmail(),
       },
     );
   }
@@ -40,10 +41,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home Page'),
-        backgroundColor: Colors.blue,
-      ),
       body: FutureBuilder(
         future: Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
@@ -100,10 +97,10 @@ class _NotesViewState extends State<NotesView> {
                   final shouldlogout = await showlogoutdialog(context);
                   developer.log(shouldlogout.toString());
                   if (shouldlogout) {
-                  FirebaseAuth.instance.signOut();
-                  Navigator.of(
-                    context,
-                  ).pushNamedAndRemoveUntil(loginRoute, (route) => false);
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(
+                      context,
+                    ).pushNamedAndRemoveUntil(loginRoute, (route) => false);
                   }
                   break;
               }
